@@ -44,11 +44,12 @@ _**ᴀᴠᴀɪʟᴀʙʟᴇ ᴏɴ ᴛᴇʟᴇɢʀᴀᴍ ᴀs [ʟɪɴᴋs sʜᴀʀ
   
 ## ᴅᴇᴘʟᴏʏᴍᴇɴᴛ ᴠᴀʀɪᴀʙʟᴇs
 ```
-- [x] API_ID - get it from telegram app
+- [x] APP_ID - get it from telegram app
 - [x] API_HASH - get it from telegram app
 - [x] TG_BOT_TOKEN - get it from telegram app
 - [x] ADMINS - for 2 or more '12345678 89674523' add space between ids
-- [x] DB_URL - MongoDB URL from [MongoDB Atlas](https://cloud.mongodb.com).
+- [x] OWNER_ID - Your Telegram id
+- [x] DB_URI - MongoDB URL from [MongoDB Atlas](https://cloud.mongodb.com).
 - [x] DB_NAME - Your MongoDB database name. **Optional**.
 - [x] DATABASE_CHANNEL - add a private channel id (for /genlink cmnd)
 ```
