@@ -65,7 +65,7 @@ _**ᴀᴠᴀɪʟᴀʙʟᴇ ᴏɴ ᴛᴇʟᴇɢʀᴀᴍ ᴀs [ʟɪɴᴋs sʜᴀʀ
 - <b>/links</b> — Show all channel links as text (paginated)
 - <b>/bulklink &lt;id1&gt; &lt;id2&gt; ...</b> — Generate links for multiple channel IDs at once
 - <b>/genlink &lt;link&gt;</b> — Store and encode any external link, get a t.me start link for it
-- <b>/channels</b> — Show all connected channel IDs and names (paginated, with next/prev buttons and auto-deleting "please wait..." status)
+- <b>/channels</b> — Show all connected channel IDs and names
 
 - <b>/reqtime</b> — Set the auto-approve request timer duration.
 - <b>/reqmode</b> — Toggle auto request approval mode (ON/OFF).
