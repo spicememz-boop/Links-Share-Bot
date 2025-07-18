@@ -7,21 +7,10 @@ from pyrogram.types import Message, User, ChatJoinRequest, InlineKeyboardMarkup,
 from pyrogram.errors import FloodWait, ChatAdminRequired, RPCError, UserNotParticipant
 from database.database import set_approval_off, is_approval_off
 from helper_func import *
-from pyrogram import Client as UserClient
-
-USER_SESSION = "your user session"  # <-- Add your userbot session string here
-user_client = None
 
 # Default settings
-APPROVAL_WAIT_TIME = 5  # seconds (yaha apna default auto approve time dalde)
-AUTO_APPROVE_ENABLED = True  # Toggle for enabling/disabling auto approval 
-
-async def get_user_client():
-    global user_client
-    if user_client is None:
-        user_client = UserClient("userbot", session_string=USER_SESSION, api_id=APP_ID, api_hash=API_HASH)
-        await user_client.start()
-    return user_client
+APPROVAL_WAIT_TIME = 5  # seconds 
+AUTO_APPROVE_ENABLED = True  # enabling/disabling auto approval 
 
 @Client.on_chat_join_request((filters.group | filters.channel) & filters.chat(CHAT_ID) if CHAT_ID else (filters.group | filters.channel))
 async def autoapprove(client, message: ChatJoinRequest):
@@ -113,31 +102,3 @@ async def approve_on_command(client, message: Message):
         await message.reply_text(f"✅ Auto-approval is now <b>ON</b> for channel <code>{channel_id}</code>.")
     else:
         await message.reply_text(f"❌ Failed to set auto-approval ON for channel <code>{channel_id}</code>.")
-
-#---------------
-
-@Client.on_message(filters.command("approveall"))
-async def approve_all_pending(client, message: Message):
-    if len(message.command) != 2 or not message.command[1].lstrip("-").isdigit():
-        return await message.reply_text("Usage: <code>/approveall {channel_id}</code>")
-    channel_id = int(message.command[1])
-    userbot = await get_user_client()
-    try:
-        member = await userbot.get_chat_member(channel_id, "me")
-        if member.status not in ["administrator", "creator"]:
-            return await message.reply_text(
-                "❌ Userbot is not admin in this channel. Please add the userbot to the channel and make it admin first."
-            )
-    except Exception as e:
-        return await message.reply_text(
-            "❌ Userbot is not a member of this channel. Please add the userbot to the channel and make it admin first."
-        )
-    approved = 0
-    async for req in userbot.get_chat_join_requests(channel_id):
-        try:
-            await userbot.approve_chat_join_request(channel_id, req.from_user.id)
-            approved += 1
-        except Exception as e:
-            continue
-    await message.reply_text(f"✅ Approved <b>{approved}</b> pending join requests in <code>{channel_id}</code>.")
-
