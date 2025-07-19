@@ -15,9 +15,6 @@ from database.database import *
 from plugins.newpost import revoke_invite_after_5_minutes
 from helper_func import *
 
-# Start pic
-START_PIC_FILE_ID = "https://telegra.ph/file/f3d3aff9ec422158feb05-d2180e3665e0ac4d32.jpg"
-
 user_banned_until = {}
 
 # Broadcast variables
