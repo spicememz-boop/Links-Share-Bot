@@ -4,7 +4,7 @@ import base64
 import time
 from collections import defaultdict
 from pyrogram import Client, filters
-from pyrogram.enums import ParseMode, ChatMemberStatus
+from pyrogram.enums import ParseMode, ChatMemberStatus, ChatAction
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
 from pyrogram.errors import FloodWait, UserNotParticipant
 
@@ -14,6 +14,8 @@ from config import *
 from database.database import *
 from plugins.newpost import revoke_invite_after_5_minutes
 from helper_func import *
+from database.db_fsub import *
+
 
 user_banned_until = {}
 
@@ -137,7 +139,7 @@ async def start_command(client: Bot, message: Message):
         
         try:
             await message.reply_photo(
-                photo=START_PIC_FILE_ID,
+                photo=START_PIC,
                 caption=START_MSG,
                 reply_markup=inline_buttons,
                 parse_mode=ParseMode.HTML
@@ -149,6 +151,14 @@ async def start_command(client: Bot, message: Message):
                 reply_markup=inline_buttons,
                 parse_mode=ParseMode.HTML
             )
+
+
+#=====================================================================================##
+# Don't Remove Credit @CodeFlix_Bots, @rohit_1888
+# Ask Doubt on telegram @CodeflixSupport
+
+#=====================================================================================##
+
 
 # Remove or comment out the old about/help callback handlers to avoid conflicts
 # @Bot.on_callback_query(filters.regex("help"))
@@ -402,7 +412,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         
         await query.edit_message_media(
             InputMediaPhoto(
-                START_IMG,
+                "https://envs.sh/Wdj.jpg",
                 ABOUT_TXT
             ),
             reply_markup=InlineKeyboardMarkup([
@@ -415,7 +425,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         user_link = f"https://t.me/{user.username}" if user.username else f"tg://openmessage?user_id={OWNER_ID}" 
         ownername = f"<a href={user_link}>{user.first_name}</a>" if user.first_name else f"<a href={user_link}>no name !</a>"
         await query.edit_message_media(
-            InputMediaPhoto(START_IMG, 
+            InputMediaPhoto("https://envs.sh/Wdj.jpg", 
                             CHANNELS_TXT
             ),
             reply_markup=InlineKeyboardMarkup([
@@ -433,7 +443,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         try:
             await query.edit_message_media(
                 InputMediaPhoto(
-                    START_IMG,
+                    START_PIC,
                     START_MSG
                 ),
                 reply_markup=inline_buttons
