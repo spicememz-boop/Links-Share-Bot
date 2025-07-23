@@ -10,7 +10,14 @@ from helper_func import *
 
 # Default settings
 APPROVAL_WAIT_TIME = 5  # seconds 
-AUTO_APPROVE_ENABLED = True  # enabling/disabling auto approval 
+AUTO_APPROVE_ENABLED = True  # Toggle for enabling/disabling auto approval 
+
+async def get_user_client():
+    global user_client
+    if user_client is None:
+        user_client = UserClient("userbot", session_string=USER_SESSION, api_id=APP_ID, api_hash=API_HASH)
+        await user_client.start()
+    return user_client
 
 @Client.on_chat_join_request((filters.group | filters.channel) & filters.chat(CHAT_ID) if CHAT_ID else (filters.group | filters.channel))
 async def autoapprove(client, message: ChatJoinRequest):
