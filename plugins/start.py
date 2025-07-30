@@ -14,7 +14,6 @@ from config import *
 from database.database import *
 from plugins.newpost import revoke_invite_after_5_minutes
 from helper_func import *
-from database.db_fsub import *
 
 
 user_banned_until = {}
