@@ -1,10 +1,11 @@
 # +++ Modified By Yato [telegram username: @i_killed_my_clan & @ProYato] +++ # aNDI BANDI SANDI JISNE BHI CREDIT HATAYA USKI BANDI RAndi 
 import os
 import asyncio
+from bot import Bot
 from config import *
 from pyrogram import Client, filters
 from pyrogram.types import Message, User, ChatJoinRequest, InlineKeyboardMarkup, InlineKeyboardButton
-from pyrogram.errors import FloodWait, ChatAdminRequired, RPCError, UserNotParticipant
+from pyrogram.errors import FloodWait, ChatAdminRequired, RPCError, UserNotParticipant, UserAlreadyInvited, UserAlreadyParticipant
 from database.database import set_approval_off, is_approval_off
 from helper_func import *
 
@@ -12,15 +13,15 @@ from helper_func import *
 APPROVAL_WAIT_TIME = 5  # seconds 
 AUTO_APPROVE_ENABLED = True  # Toggle for enabling/disabling auto approval 
 
-async def get_user_client():
+"""async def get_user_client():
     global user_client
     if user_client is None:
         user_client = UserClient("userbot", session_string=USER_SESSION, api_id=APP_ID, api_hash=API_HASH)
         await user_client.start()
-    return user_client
+    return user_client"""
 
 @Client.on_chat_join_request((filters.group | filters.channel) & filters.chat(CHAT_ID) if CHAT_ID else (filters.group | filters.channel))
-async def autoapprove(client, message: ChatJoinRequest):
+async def auto_approve(client: Bot, message: ChatJoinRequest):
     global AUTO_APPROVE_ENABLED
 
     if not AUTO_APPROVE_ENABLED:
@@ -31,25 +32,27 @@ async def autoapprove(client, message: ChatJoinRequest):
 
     # check agr approval of hai us chnl m
     if await is_approval_off(chat.id):
-        print(f"Auto-approval is OFF for channel {chat.id}")
-        return
+        return print(f"Auto-approval is OFF for channel {chat.id}")
 
     print(f"{user.first_name} requested to join {chat.title}")
-    
     await asyncio.sleep(APPROVAL_WAIT_TIME)
 
     # Check if user is already a participant before approving
     try:
         member = await client.get_chat_member(chat.id, user.id)
         if member.status in ["member", "administrator", "creator"]:
-            print(f"User {user.id} is already a participant of {chat.id}, skipping approval.")
-            return
+            return print(f"User {user.id} is already a participant of {chat.id}, skipping approval.")
+
+        await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
+
+    except UserAlreadyParticipant:
+        # Explicitly handle Already Participation error for worst case scenario!!
+        return
+
     except UserNotParticipant:
         # User is not a member, handle accordingly
         pass
 
-    await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
-    
     if APPROVED == "on":
         invite_link = await client.export_chat_invite_link(chat.id)
         buttons = [
@@ -65,6 +68,7 @@ async def autoapprove(client, message: ChatJoinRequest):
             caption=caption,
             reply_markup=markup
         )
+
 
 @Client.on_message(filters.command("reqtime") & is_owner_or_admin)
 async def set_reqtime(client, message: Message):
