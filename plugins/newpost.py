@@ -1,4 +1,4 @@
-# +++ Modified By Yato [telegram username: @i_killed_my_clan & @ProYato] +++ # aNDI BANDI SANDI JISNE BHI CREDIT HATAYA USKI BANDI RAndi 
+# +++ Modified By [telegram username: @Codeflix_Bots
 import asyncio
 import base64
 from bot import Bot
@@ -350,3 +350,4 @@ async def paginate_channel_ids(client, callback_query):
     page = int(callback_query.data.split("_")[1])
     channels = await get_channels()
     await send_channel_ids_page(client, callback_query.message, channels, page, edit=True)
+
