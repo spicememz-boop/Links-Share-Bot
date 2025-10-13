@@ -1,4 +1,4 @@
-# +++ Modified By [telegram username: @Codeflix_Bots
+
 import motor.motor_asyncio
 import base64
 from config import DB_URI, DB_NAME
@@ -255,6 +255,17 @@ async def get_current_invite_link(channel_id: int) -> Optional[dict]:
         return None
     except Exception as e:
         print(f"Error fetching current invite link for channel {channel_id}: {e}")
+        return None
+
+async def get_link_creation_time(channel_id: int):
+    """Get the creation time of the current invite link for a channel."""
+    try:
+        channel = await channels_collection.find_one({"channel_id": channel_id, "status": "active"})
+        if channel and "invite_link_created_at" in channel:
+            return channel["invite_link_created_at"]
+        return None
+    except Exception as e:
+        print(f"Error fetching link creation time for channel {channel_id}: {e}")
         return None
 
 async def add_fsub_channel(channel_id: int) -> bool:
