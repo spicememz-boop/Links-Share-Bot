@@ -1,4 +1,4 @@
-
+# +++ Modified By Yato [telegram username: @i_killed_my_clan & @ProYato] +++ # aNDI BANDI SANDI JISNE BHI CREDIT HATAYA USKI BANDI RAndi 
 import asyncio
 import base64
 from bot import Bot
@@ -30,19 +30,36 @@ async def revoke_invite_after_5_minutes(client: Bot, channel_id: int, link: str,
     except Exception as e:
         print(f"Fᴀɪʟᴇᴅ ᴛᴏ ʀᴇᴠᴏᴋᴇ ɪɴᴠɪᴛᴇ ғᴏʀ ᴄʜᴀɴɴᴇʟ {channel_id}: {e}")
 
-# channel add cmnd
-@Bot.on_message(filters.command('addch') & is_owner_or_admin)
+# Add chat command
+@Bot.on_message((filters.command('addchat') | filters.command('addch')) & is_owner_or_admin)
 async def set_channel(client: Bot, message: Message):
     try:
         channel_id = int(message.command[1])
     except (IndexError, ValueError):
-        return await message.reply("<b><blockquote expandable>Iɴᴠᴀʟɪᴅ ᴄʜᴀɴɴᴇʟ ID. Exᴀᴍᴘʟᴇ: <code>/setchannel &lt;channel_id&gt;</code></b>")
+        return await message.reply("<b><blockquote expandable>Iɴᴠᴀʟɪᴅ ᴄʜᴀᴛ ID. Exᴀᴍᴘʟᴇ: <code>/addchat &lt;chat_id&gt;</code></b>")
     
     try:
         chat = await client.get_chat(channel_id)
 
-        if chat.permissions and not (chat.permissions.can_post_messages or chat.permissions.can_edit_messages):
-            return await message.reply(f"<b><blockquote expandable>I ᴀᴍ ɪɴ {chat.title}, ʙᴜᴛ I ʟᴀᴄᴋ ᴘᴏsᴛɪɴɢ ᴏʀ ᴇᴅɪᴛɪɴɢ ᴘᴇʀᴍɪssɪᴏɴs.</b>")
+        # Check permissions based on chat type
+        if chat.permissions:
+            # For groups/channels, check appropriate permissions
+            has_permission = False
+            if hasattr(chat.permissions, 'can_post_messages') and chat.permissions.can_post_messages:
+                has_permission = True
+            elif hasattr(chat.permissions, 'can_edit_messages') and chat.permissions.can_edit_messages:
+                has_permission = True
+            elif chat.type.name in ['GROUP', 'SUPERGROUP']:
+                # For groups, having the bot as admin is usually sufficient
+                try:
+                    bot_member = await client.get_chat_member(chat.id, (await client.get_me()).id)
+                    if bot_member.status.name in ['ADMINISTRATOR', 'CREATOR']:
+                        has_permission = True
+                except:
+                    pass
+            
+            if not has_permission:
+                return await message.reply(f"<b><blockquote expandable>I ᴀᴍ ɪɴ {chat.title}, ʙᴜᴛ I ʟᴀᴄᴋ ᴘᴏsᴛɪɴɢ ᴏʀ ᴇᴅɪᴛɪɴɢ ᴘᴇʀᴍɪssɪᴏɴs.</b>")
         
         await save_channel(channel_id)
         base64_invite = await save_encoded_link(channel_id)
@@ -51,7 +68,7 @@ async def set_channel(client: Bot, message: Message):
         await save_encoded_link2(channel_id, base64_request)
         request_link = f"https://t.me/{client.username}?start=req_{base64_request}"
         reply_text = (
-            f"<b><blockquote expandable>✅ Cʜᴀɴɴᴇʟ {chat.title} ({channel_id}) ʜᴀs ʙᴇᴇɴ ᴀᴅᴅᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.</b>\n\n"
+            f"<b><blockquote expandable>✅ Cʜᴀᴛ {chat.title} ({channel_id}) ʜᴀs ʙᴇᴇɴ ᴀᴅᴅᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.</b>\n\n"
             f"<b>🔗 Nᴏʀᴍᴀʟ Lɪɴᴋ:</b> <code>{normal_link}</code>\n"
             f"<b>🔗 Rᴇǫᴜᴇsᴛ Lɪɴᴋ:</b> <code>{request_link}</code>"
         )
@@ -67,19 +84,19 @@ async def set_channel(client: Bot, message: Message):
     except Exception as e:
         return await message.reply(f"Unexpected Error: {str(e)}")
 
-# Delete channel command
-@Bot.on_message(filters.command('delch') & is_owner_or_admin)
+# Delete chat command
+@Bot.on_message((filters.command('delchat') | filters.command('delch')) & is_owner_or_admin)
 async def del_channel(client: Bot, message: Message):
     try:
         channel_id = int(message.command[1])
     except (IndexError, ValueError):
-        return await message.reply("<b><blockquote expandable>Iɴᴠᴀʟɪᴅ ᴄʜᴀɴɴᴇʟ ID. Exᴀᴍᴘʟᴇ: <code>/delch &lt;channel_id&gt;</code></b>")
+        return await message.reply("<b><blockquote expandable>Iɴᴠᴀʟɪᴅ ᴄʜᴀᴛ ID. Exᴀᴍᴘʟᴇ: <code>/delch &lt;chat_id&gt;</code></b>")
     
     await delete_channel(channel_id)
-    return await message.reply(f"<b><blockquote expandable>❌ Cʜᴀɴɴᴇʟ {channel_id} ʜᴀs ʙᴇᴇɴ ʀᴇᴍᴏᴠᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.</b>")
+    return await message.reply(f"<b><blockquote expandable>❌ Cʜᴀᴛ {channel_id} ʜᴀs ʙᴇᴇɴ ʀᴇᴍᴏᴠᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.</b>")
 
 # Channel post command
-@Bot.on_message(filters.command('links') & is_owner_or_admin)
+@Bot.on_message(filters.command('ch_links') & is_owner_or_admin)
 async def channel_post(client: Bot, message: Message):
     status_msg = await message.reply("⏳")
     try:
