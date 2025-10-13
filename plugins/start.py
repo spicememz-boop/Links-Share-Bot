@@ -20,7 +20,6 @@ from config import *
 from database.database import *
 from plugins.newpost import revoke_invite_after_5_minutes
 from helper_func import *
-from database.db_fsub import *
 
 # Create a lock dictionary for each channel to prevent concurrent link generation
 channel_locks = defaultdict(asyncio.Lock)
