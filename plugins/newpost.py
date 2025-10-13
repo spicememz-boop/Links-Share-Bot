@@ -1,4 +1,4 @@
-# +++ Modified By Yato [telegram username: @i_killed_my_clan & @ProYato] +++ # aNDI BANDI SANDI JISNE BHI CREDIT HATAYA USKI BANDI RAndi 
+# +++ Modified By Yato [telegram username: @ProYato] +++
 import asyncio
 import base64
 from bot import Bot
@@ -503,3 +503,4 @@ async def get_chat_info(client, channel_id):
         if channel_id in chat_info_cache:
             return chat_info_cache[channel_id][0]
         raise e
+
