@@ -42,12 +42,12 @@ async def start_command(client: Bot, message: Message):
             )
             
     await add_user(user_id)
-
+"""
    # ✅ Check Force Subscription
     if not await is_subscribed(client, user_id):
         #await temp.delete()
         return await not_joined(client, message)
-
+""""
 
 # 
     # Check FSub requirements
