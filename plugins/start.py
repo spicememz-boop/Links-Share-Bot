@@ -47,7 +47,7 @@ async def start_command(client: Bot, message: Message):
     if not await is_subscribed(client, user_id):
         #await temp.delete()
         return await not_joined(client, message)
-""""
+"""
 
 # 
     # Check FSub requirements
